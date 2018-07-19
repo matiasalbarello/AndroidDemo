@@ -1,10 +1,16 @@
 package com.mytaxi.android_demo.activities;
 
 
+import android.content.Intent;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.matcher.ComponentNameMatchers;
+import android.support.test.espresso.intent.matcher.IntentMatchers;
+import android.support.test.espresso.intent.matcher.UriMatchers;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -21,6 +27,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -30,7 +38,7 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public class AuthenticatedActivityTest {
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> activityRule = new IntentsTestRule<>(MainActivity.class);
 
     @Test
     public void searchDriver() {
@@ -60,5 +68,12 @@ public class AuthenticatedActivityTest {
 
         onView(allOf(withId(R.id.textViewDriverName), withText("Sarah Scott")))
                 .check(matches(isDisplayed()));
+
+        onView(withId(R.id.fab))
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_DIAL));
+
     }
 }
